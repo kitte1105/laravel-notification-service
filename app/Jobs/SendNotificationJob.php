@@ -2,10 +2,10 @@
 
 namespace App\Jobs;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Notification;
 use App\NotificationChannels\StrategyResolver;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 
 class SendNotificationJob implements ShouldQueue
 {
@@ -16,9 +16,7 @@ class SendNotificationJob implements ShouldQueue
      */
     public function __construct(
         public int $notificationId,
-    ) {
-
-    }
+    ) {}
 
     /**
      * Execute the job.

@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\NotificationChannel;
+use App\Enums\NotificationStatus;
 use Database\Factories\NotificationFactory;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Enums\NotificationStatus;
-use App\Enums\NotificationChannel;
 
 class Notification extends Model
 {
@@ -16,6 +15,7 @@ class Notification extends Model
     use HasFactory;
 
     const MAX_ATTEMPTS = 5;
+
     const DEFERRED_MINUTES = 5;
 
     protected $fillable = [
@@ -95,6 +95,7 @@ class Notification extends Model
         $this->processing_started_at = null;
         $this->save();
     }
+
     public function registerAttempt(): void
     {
         $this->attempts++;

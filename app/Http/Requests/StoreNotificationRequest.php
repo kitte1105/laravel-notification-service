@@ -39,7 +39,7 @@ class StoreNotificationRequest extends FormRequest
                 'required',
                 'string',
                 'max:500',
-            ]
+            ],
         ];
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Notification;
-use Illuminate\Http\JsonResponse;
+use App\Dto\NotificationData;
+use App\Enums\NotificationChannel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreNotificationRequest;
-use App\Dto\NotificationData;
+use App\Models\Notification;
 use App\Services\NotificationService;
-use App\Enums\NotificationChannel;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller

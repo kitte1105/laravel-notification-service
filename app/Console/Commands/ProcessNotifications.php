@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SendNotificationJob;
+use App\Models\Notification;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use App\Models\Notification;
-use App\Jobs\SendNotificationJob;
 
 #[Signature('app:process-notifications')]
 #[Description('Process pending notifications')]

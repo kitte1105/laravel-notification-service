@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Notification;
 use App\Enums\NotificationChannel;
 use App\Enums\NotificationStatus;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
+use Tests\TestCase;
 
 class NotificationControllerTest extends TestCase
 {
@@ -36,10 +36,10 @@ class NotificationControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('notifications', [
-            'user_id'  => $user->id,
-            'channel'  => NotificationChannel::Email->value,
-            'status'   => NotificationStatus::Pending->value,
-            'message'  => 'Test notification',
+            'user_id' => $user->id,
+            'channel' => NotificationChannel::Email->value,
+            'status' => NotificationStatus::Pending->value,
+            'message' => 'Test notification',
             'attempts' => 0,
         ]);
     }
@@ -78,7 +78,7 @@ class NotificationControllerTest extends TestCase
             'message' => 'Test notification',
         ]);
 
-        $response = $this->getJson("/api/notifications");
+        $response = $this->getJson('/api/notifications');
 
         $response
             ->assertOk()
@@ -128,7 +128,7 @@ class NotificationControllerTest extends TestCase
             'status' => NotificationStatus::Sent,
         ]);
 
-        $response = $this->getJson('/api/notifications?status='. NotificationStatus::Pending->value);
+        $response = $this->getJson('/api/notifications?status='.NotificationStatus::Pending->value);
 
         $response
             ->assertOk()
@@ -153,7 +153,7 @@ class NotificationControllerTest extends TestCase
             'channel' => NotificationChannel::Telegram,
         ]);
 
-        $response = $this->getJson('/api/notifications?channel='. NotificationChannel::Telegram->value);
+        $response = $this->getJson('/api/notifications?channel='.NotificationChannel::Telegram->value);
 
         $response
             ->assertOk()
@@ -199,11 +199,11 @@ class NotificationControllerTest extends TestCase
             'channel' => NotificationChannel::Telegram,
         ]);
 
-        $response = $this->getJson('/api/notifications?' . http_build_query([
-                'user_id' => $firstUser->id,
-                'status' => NotificationStatus::Sent->value,
-                'channel' => NotificationChannel::Telegram->value,
-            ]));
+        $response = $this->getJson('/api/notifications?'.http_build_query([
+            'user_id' => $firstUser->id,
+            'status' => NotificationStatus::Sent->value,
+            'channel' => NotificationChannel::Telegram->value,
+        ]));
 
         $response
             ->assertOk()

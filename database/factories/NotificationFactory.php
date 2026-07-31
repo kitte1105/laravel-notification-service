@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Notification;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Enums\NotificationChannel;
 use App\Enums\NotificationStatus;
+use App\Models\Notification;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Notification>

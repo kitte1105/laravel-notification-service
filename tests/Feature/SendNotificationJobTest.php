@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Notification;
-use App\Enums\NotificationStatus;
 use App\Enums\NotificationChannel;
+use App\Enums\NotificationStatus;
 use App\Jobs\SendNotificationJob;
-use App\NotificationChannels\StrategyResolver;
+use App\Models\Notification;
+use App\Models\User;
 use App\NotificationChannels\ChannelStrategy;
-use Mockery;
+use App\NotificationChannels\StrategyResolver;
 use Exception;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use Tests\TestCase;
 
 class SendNotificationJobTest extends TestCase
 {
@@ -30,7 +30,7 @@ class SendNotificationJobTest extends TestCase
         ]);
 
         $job = new SendNotificationJob($notification->id);
-        $job->handle(new StrategyResolver());
+        $job->handle(new StrategyResolver);
 
         $notification->refresh();
 

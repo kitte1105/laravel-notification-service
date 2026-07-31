@@ -10,8 +10,7 @@ readonly class NotificationData
         public int $userId,
         public NotificationChannel $channel,
         public string $message,
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

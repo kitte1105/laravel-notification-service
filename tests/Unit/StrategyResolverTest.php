@@ -12,7 +12,7 @@ class StrategyResolverTest extends TestCase
 {
     public function test_resolves_email_strategy(): void
     {
-        $resolver = new StrategyResolver();
+        $resolver = new StrategyResolver;
 
         $strategy = $resolver->resolve(NotificationChannel::Email);
 
@@ -24,7 +24,7 @@ class StrategyResolverTest extends TestCase
 
     public function test_resolves_telegram_strategy(): void
     {
-        $resolver = new StrategyResolver();
+        $resolver = new StrategyResolver;
 
         $strategy = $resolver->resolve(NotificationChannel::Telegram);
 
