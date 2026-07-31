@@ -14,6 +14,10 @@ class Notification extends Model
 {
     /** @use HasFactory<NotificationFactory> */
     use HasFactory;
+
+    const MAX_ATTEMPTS = 5;
+    const DEFERRED_MINUTES = 5;
+
     protected $fillable = [
         'user_id',
         'channel',
@@ -21,6 +25,7 @@ class Notification extends Model
         'message',
         'attempts',
     ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -32,5 +37,68 @@ class Notification extends Model
             'status' => NotificationStatus::class,
             'channel' => NotificationChannel::class,
         ];
+    }
+
+    public function scopeReadyToSend($query)
+    {
+        return $query->where(function ($query) {
+            $query
+                ->where('status', NotificationStatus::Pending)
+                ->where(function ($query) {
+                    $query
+                        ->whereNull('last_attempt_at')
+                        ->orWhere(
+                            'last_attempt_at',
+                            '<=',
+                            now()->subMinutes(self::DEFERRED_MINUTES)
+                        );
+                });
+        })->orWhere(function ($query) {
+            $query
+                ->where('status', NotificationStatus::Processing)
+                ->where(
+                    'processing_started_at',
+                    '<=',
+                    now()->subMinutes(self::DEFERRED_MINUTES * 2)
+                );
+        });
+    }
+
+    public function markAsProcessing(): void
+    {
+        $this->status = NotificationStatus::Processing;
+        $this->processing_started_at = now();
+        $this->save();
+    }
+
+    public function markAsSent(): void
+    {
+        $this->status = NotificationStatus::Sent;
+        $this->delivered_at = now();
+        $this->last_error = null;
+        $this->processing_started_at = null;
+        $this->save();
+    }
+
+    public function markAsDeferred(string $error): void
+    {
+        $this->status = NotificationStatus::Pending;
+        $this->last_error = $error;
+        $this->processing_started_at = null;
+        $this->save();
+    }
+
+    public function markAsFailed(string $error): void
+    {
+        $this->status = NotificationStatus::Failed;
+        $this->last_error = $error;
+        $this->processing_started_at = null;
+        $this->save();
+    }
+    public function registerAttempt(): void
+    {
+        $this->attempts++;
+        $this->last_attempt_at = now();
+        $this->save();
     }
 }

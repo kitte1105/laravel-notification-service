@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('last_error')->nullable();
             $table->timestamp('last_attempt_at')->nullable();
             $table->timestamp('delivered_at')->nullable();
+            $table->timestamp('processing_started_at')->nullable();
             $table->timestamps();
             $table->index(['user_id', 'status']);
             $table->index(['user_id', 'channel']);

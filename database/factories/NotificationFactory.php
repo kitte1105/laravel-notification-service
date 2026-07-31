@@ -23,7 +23,7 @@ class NotificationFactory extends Factory
         return [
             'user_id' => User::factory(),
             'channel' => fake()->randomElement(NotificationChannel::cases()),
-            'status' => NotificationStatus::Processing,
+            'status' => NotificationStatus::Pending,
             'message' => fake()->text(200),
             'attempts' => 0,
             'last_error' => null,

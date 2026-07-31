@@ -8,14 +8,16 @@ use App\Models\User;
 use App\Models\Notification;
 use App\Enums\NotificationChannel;
 use App\Enums\NotificationStatus;
+use Illuminate\Support\Facades\Queue;
 
 class NotificationControllerTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function test_creates_notification_successfully(): void
     {
+        Queue::fake();
+
         $user = User::factory()->create();
 
         $data = [
@@ -36,7 +38,7 @@ class NotificationControllerTest extends TestCase
         $this->assertDatabaseHas('notifications', [
             'user_id'  => $user->id,
             'channel'  => NotificationChannel::Email->value,
-            'status'   => NotificationStatus::Processing->value,
+            'status'   => NotificationStatus::Pending->value,
             'message'  => 'Test notification',
             'attempts' => 0,
         ]);
@@ -60,7 +62,7 @@ class NotificationControllerTest extends TestCase
                 'id' => $notification->id,
                 'user_id' => $user->id,
                 'channel' => NotificationChannel::Email->value,
-                'status' => NotificationStatus::Processing->value,
+                'status' => NotificationStatus::Pending->value,
                 'message' => 'Test notification',
                 'attempts' => 0,
             ]);
@@ -118,7 +120,7 @@ class NotificationControllerTest extends TestCase
 
         Notification::factory()->count(3)->create([
             'user_id' => $user->id,
-            'status' => NotificationStatus::Processing,
+            'status' => NotificationStatus::Pending,
         ]);
 
         Notification::factory()->count(4)->create([
@@ -126,14 +128,14 @@ class NotificationControllerTest extends TestCase
             'status' => NotificationStatus::Sent,
         ]);
 
-        $response = $this->getJson('/api/notifications?status='. NotificationStatus::Processing->value);
+        $response = $this->getJson('/api/notifications?status='. NotificationStatus::Pending->value);
 
         $response
             ->assertOk()
             ->assertJsonCount(3);
 
         foreach ($response->json() as $notification) {
-            $this->assertEquals(NotificationStatus::Processing->value, $notification['status']);
+            $this->assertEquals(NotificationStatus::Pending->value, $notification['status']);
         }
     }
 
@@ -169,13 +171,13 @@ class NotificationControllerTest extends TestCase
 
         Notification::factory()->count(2)->create([
             'user_id' => $firstUser->id,
-            'status' => NotificationStatus::Processing,
+            'status' => NotificationStatus::Pending,
             'channel' => NotificationChannel::Email,
         ]);
 
         Notification::factory()->count(4)->create([
             'user_id' => $firstUser->id,
-            'status' => NotificationStatus::Processing,
+            'status' => NotificationStatus::Pending,
             'channel' => NotificationChannel::Telegram,
         ]);
 
@@ -193,7 +195,7 @@ class NotificationControllerTest extends TestCase
 
         Notification::factory()->count(2)->create([
             'user_id' => $secondUser->id,
-            'status' => NotificationStatus::Processing,
+            'status' => NotificationStatus::Pending,
             'channel' => NotificationChannel::Telegram,
         ]);
 

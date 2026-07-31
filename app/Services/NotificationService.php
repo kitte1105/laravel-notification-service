@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dto\NotificationData;
 use App\Models\Notification;
 use App\Enums\NotificationStatus;
+use App\Jobs\SendNotificationJob;
 
 class NotificationService
 {
@@ -12,9 +13,11 @@ class NotificationService
     {
         $notification = new Notification();
         $notification->fill($notificationData->toArray());
-        $notification->status = NotificationStatus::Processing;
+        $notification->status = NotificationStatus::Pending;
         $notification->attempts = 0;
         $notification->save();
+
+        SendNotificationJob::dispatch($notification->id);
 
         return $notification;
     }
